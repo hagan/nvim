@@ -11,11 +11,32 @@ return {
                 "lua_ls",
                 "rust_analyzer",
                 "tsserver",
+                "pyright",
+                "yamlls",
+                "lua_ls",
+                "golangci_lint_ls",
+                "dockerls",
+                "cssls",
+                "clangd",
+                "bashls",
             },
             handlers = {
                 function(server_name) -- default handler (optional)
-                    print("setting up ",  server_name)
-                    require("lspconfig")[server_name].setup {}
+                    if server_name == "lua_ls" then
+                        -- print("OVERRIDE setting up", server_name)
+                        require("lspconfig")[server_name].setup {
+                            settings = {
+                                Lua = {
+                                    diagnostics = {
+                                        globals = { 'vim', }
+                                    }
+                                }
+                            }
+                        }
+                    else
+                        -- print("setting up ", server_name)
+                        require("lspconfig")[server_name].setup {}
+                    end
                 end,
             },
         })
